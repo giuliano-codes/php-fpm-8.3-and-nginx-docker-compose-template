@@ -1,0 +1,29 @@
+services:
+
+    php:
+        container_name: php-nginx-template-php
+        build:
+            context: ./docker/php
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        networks:
+            - php
+
+    nginx:
+        container_name: php-nginx-template-nginx
+        image: nginx:alpine
+        restart: unless-stopped
+        ports:
+            - "8000:80"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/:/etc/nginx/conf.d/
+        networks:
+            - php
+
+networks:
+    php:
+        driver: bridge
